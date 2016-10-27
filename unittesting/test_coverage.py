@@ -17,7 +17,7 @@ except:
 class UnitTestingCoverageCommand(UnitTestingCommand):
 
     def unit_testing(self, stream, package, settings):
-        package_path = os.path.join(sublime.packages_path(), package)
+        package_path = os.path.realpath(os.path.join(sublime.packages_path(), package))
         data_file = os.path.join(
             sublime.packages_path(), "User", "UnitTesting", package, "coverage")
         data_file_dir = os.path.dirname(data_file)
@@ -25,7 +25,7 @@ class UnitTestingCoverageCommand(UnitTestingCommand):
             os.makedirs(data_file_dir)
         if os.path.exists(data_file):
             os.unlink(data_file)
-        config_file = os.path.join(package_path, ".coveragerc")
+        config_file = os.path.realpath(os.path.join(package_path, ".coveragerc"))
         include = "{}/*".format(package_path)
         omit = "{}/{}/*".format(package_path, settings["tests_dir"])
         if os.path.exists(config_file):
@@ -46,7 +46,7 @@ class UnitTestingCoverageCommand(UnitTestingCommand):
         def cleanup():
             stream.write("\n")
             cov.stop()
-            coverage.files.RELATIVE_DIR = os.path.normcase(package_path + os.sep)
+            coverage.files.RELATIVE_DIR = os.path.realpath(os.path.normcase(package_path)) + os.sep
             ignore_errors = cov.get_option("report:ignore_errors")
             show_missing = cov.get_option("report:show_missing")
             cov.report(file=stream, ignore_errors=ignore_errors, show_missing=show_missing)
