@@ -5,11 +5,14 @@ environment:
     global:
         # Your package name
         PACKAGE: "UnitTesting"
+        COVERALLS_REPO_TOKEN:
+            secure: TJ2BCRujJaYemSu/OwzvdH85ACGyRowdkx7t4sR4qJ/MwYcGwpV2UwaYFuxMvNAr
+
     matrix:
-        - SUBLIME_TEXT_VERSION : "2"
+        # - SUBLIME_TEXT_VERSION : "2"
         - SUBLIME_TEXT_VERSION : "3"
-        - SUBLIME_TEXT_VERSION : "2"
-          PCINSTALL: true
+        # - SUBLIME_TEXT_VERSION : "2"
+          # PCINSTALL: true
         - SUBLIME_TEXT_VERSION : "3"
           PCINSTALL: true
 
@@ -22,12 +25,15 @@ build: off
 test_script:
     - ps: .\sbin\appveyor.ps1 "run_tests" -coverage -verbose
 
-# it is not quite working
-# on_success:
-#     - ps: |
-#         if (${env:SUBLIME_TEXT_VERSION} -eq 3) {
-#             $branch = git name-rev --name-only HEAD | out-string
-#             invoke-expression "git checkout -q $branch" -erroraction silentlycontinue
-#             pip install coveralls
-#             invoke-expression "coveralls 2>&1" -erroraction silentlycontinue
-#         }
+on_success:
+    - cmd: SET COVERALLS_SERVICE_NAME=appveyor
+    - cmd: SET TRAVIS_JOB_ID=%APPVEYOR_BUILD_ID%
+    - cmd: SET TRAVIS_BRANCH=%APPVEYOR_REPO_BRANCH%
+    - cmd: SET PYTHON=C:\Python33
+    - cmd: SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+    - ps: |
+        if (${env:SUBLIME_TEXT_VERSION} -eq 3) {
+            pip install python-coveralls
+            coveralls 2>&1 | %{ "$_" }
+            write-host
+        }
