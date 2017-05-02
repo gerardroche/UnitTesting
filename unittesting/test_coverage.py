@@ -50,6 +50,12 @@ class UnitTestingCoverageCommand(UnitTestingCommand):
             show_missing = cov.get_option("report:show_missing")
             cov.report(file=stream, ignore_errors=ignore_errors, show_missing=show_missing)
             cov.save()
+            cov.html_report(
+                directory=os.path.join(package_path, 'covhtml'),
+                include=include,
+                omit=omit,
+                ignore_errors=ignore_errors
+            )
 
         super().unit_testing(stream, package, settings, [cleanup])
 
