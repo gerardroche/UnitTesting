@@ -48,3 +48,20 @@ class UnitTestingCurrentFileCommand(UnitTestingCommand):
             test_file = ""
 
         super(UnitTestingCurrentFileCommand, self).run("{}:{}".format(project_name, test_file))
+
+
+class UnitTestingCurrentFileCoverageCommand(UnitTestingCoverageCommand):
+
+    def run(self):
+        self.current_file_coverage = True
+
+        project_name = self.current_project_name
+        if not project_name:
+            sublime.message_dialog("Project not found.")
+            return
+
+        test_file = self.current_test_file
+        if not test_file:
+            test_file = ""
+
+        super(UnitTestingCurrentFileCoverageCommand, self).run("{}:{}".format(project_name, test_file))

@@ -37,8 +37,7 @@ class UnitTestingCoverageCommand(UnitTestingCommand):
         else:
             config_file = None
 
-        cov = coverage.Coverage(
-            data_file=data_file, config_file=config_file, include=include, omit=omit)
+        cov = coverage.Coverage(data_file=data_file, config_file=config_file, include=include, omit=omit)
         cov.start()
         self.reload_package(package)
 

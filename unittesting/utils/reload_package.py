@@ -29,7 +29,7 @@ def reload_package(pkg_name, dummy=True):
 
     main = sys.modules[pkg_name]
 
-    dprint("begin", fill='=')
+    dprint("begin reload package: " + pkg_name, fill='=')
 
     modules = {main.__name__: main}
     modules.update({name: module for name, module in sys.modules.items()
@@ -160,7 +160,7 @@ class FilterFinder:
         module = self._modules[name]
         sys.modules[name] = module  # restore the module back
         with self._stack_meter as depth:
-            dprint("reloading", ('| '*depth) + '|--', name)
+            # dprint("reloading", ('| '*depth) + '|--', name)
             try:
                 return module.__loader__.load_module(name)
             except:
