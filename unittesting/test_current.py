@@ -1,27 +1,20 @@
-import sublime
 import sys
-from .test_package import UnitTestingCommand
+
+import sublime
+import sublime_plugin
+
 from .test_coverage import UnitTestingCoverageCommand
 
 
-class UnitTestingCurrentPackageCommand(UnitTestingCommand):
+class UnitTestingCurrentPackageCommand(sublime_plugin.WindowCommand):
+
     def run(self):
-        project_name = self.current_package_name
-        if not project_name:
-            sublime.message_dialog("Cannot determine package name.")
-            return
-
-        sublime.set_timeout_async(
-            lambda: super(UnitTestingCurrentPackageCommand, self).run(project_name))
-
-    def unit_testing(self, stream, package, settings):
-        parent = super(UnitTestingCurrentPackageCommand, self)
-        if settings["reload_package_on_testing"]:
-            self.reload_package(
-                package, dummy=True, show_reload_progress=settings["show_reload_progress"])
-        parent.unit_testing(stream, package, settings)
+        print('UnitTesting: DEPRECATED command; use unit_testing_test_suite instead')
+        self.window.run('unit_testing_test_suite')
 
 
+# TODO This is DEPRECATED and should be REMOVED; Use `unit_testing_test_suite with args {'coverage': true}` instead.
+# TODO Refactor UnitTestingCurrentPackageCoverageCommand code into new command unit_testing_test_suite
 class UnitTestingCurrentPackageCoverageCommand(UnitTestingCoverageCommand):
 
     def run(self):
@@ -36,7 +29,10 @@ class UnitTestingCurrentPackageCoverageCommand(UnitTestingCoverageCommand):
         return "coverage" in sys.modules
 
 
-class UnitTestingCurrentFileCommand(UnitTestingCommand):
+# TODO This is DEPRECATED and should be REMOVED; Use `unit_testing_test_file with args {'coverage': true}` instead.
+# TODO Refactor UnitTestingCurrentFileCoverageCommand code into new command unit_testing_test_file
+class UnitTestingCurrentFileCoverageCommand(UnitTestingCoverageCommand):
+
     def run(self):
         project_name = self.current_package_name
         if not project_name:
@@ -45,6 +41,24 @@ class UnitTestingCurrentFileCommand(UnitTestingCommand):
 
         test_file = self.current_test_file
         if not test_file:
-            test_file = ""
 
-        super(UnitTestingCurrentFileCommand, self).run("{}:{}".format(project_name, test_file))
+            # If the test file is empty the test run will error woth message
+            # like: "ERROR: Start directory is not importable:
+            # '/path/to/st/Packages/PackageName:/tests'"
+            sublime.message_dialog('Cannot determine test file name.')
+            return
+
+        if not test_file.startswith('test_'):
+            test_file = 'test_' + test_file
+
+        super(UnitTestingCurrentFileCoverageCommand, self).run("{}:{}".format(project_name, test_file))
+
+    def is_enabled(self):
+        return "coverage" in sys.modules
+
+
+class UnitTestingCurrentFileCommand(sublime_plugin.WindowCommand):
+
+    def run(self):
+        print('UnitTesting: DEPRECATED command; use unit_testing_test_file instead')
+        self.window.run('unit_testing_test_file')

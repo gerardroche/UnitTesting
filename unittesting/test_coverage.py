@@ -4,6 +4,7 @@ import sys
 import re
 from .test_package import UnitTestingCommand
 
+
 try:
     import coverage
 except Exception:

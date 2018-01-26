@@ -5,18 +5,38 @@
   },
   {
     "caption": "UnitTesting: Test Current Package",
-    "command": "unit_testing_current_package"
+    "command": "unit_testing_test_suite"
   },
   {
     "caption": "UnitTesting: Test Current Package with Coverage",
     "command": "unit_testing_current_package_coverage"
   },
   {
+    "caption": "UnitTesting: Test Current File with Coverage",
+    "command": "unit_testing_current_file_coverage"
+  },
+  {
     "caption": "UnitTesting: Test Current File",
-    "command": "unit_testing_current_file"
+    "command": "unit_testing_test_file"
   },
   {
     "caption": "UnitTesting: Show Output Panel",
-    "command": "show_panel", "args": { "panel": "output.UnitTesting" }
-  }
+    "command": "unit_testing_test_results"
+  },
+
+    // New command API (compatible with https://github.com/gerardroche/sublime-test)
+
+    // TODO { "caption": ":UnitTestingTestCancel", "command": "unit_testing_test_cancel" },
+    { "caption": ":UnitTestingTestFile", "command": "unit_testing_test_file" },
+    // TODO { "caption": ":UnitTestingTestLast", "command": "unit_testing_test_last" },
+    { "caption": ":UnitTestingTestNearest", "command": "unit_testing_test_nearest" },
+    { "caption": ":UnitTestingTestResults", "command": "unit_testing_test_results" },
+    { "caption": ":UnitTestingTestSuite", "command": "unit_testing_test_suite" },
+    { "caption": ":UnitTestingTestSwitch", "command": "unit_testing_test_switch" },
+    // TODO { "caption": ":UnitTestingTestVisit", "command": "unit_testing_test_visit" },
+
+    // New command API (additional commands)
+
+    { "caption": ":UnitTestingTestFile (with coverage)", "command": "unit_testing_test_file", "args": {"coverage": true}},
+    { "caption": ":UnitTestingTestSuite (with coverage)", "command": "unit_testing_test_suite", "args": {"coverage": true}},
 ]

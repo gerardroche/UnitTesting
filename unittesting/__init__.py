@@ -4,6 +4,7 @@ from .scheduler import run_scheduler
 from .test_package import UnitTestingCommand
 from .test_coverage import UnitTestingCoverageCommand
 from .test_current import UnitTestingCurrentFileCommand
+from .test_current import UnitTestingCurrentFileCoverageCommand
 from .test_current import UnitTestingCurrentPackageCommand
 from .test_current import UnitTestingCurrentPackageCoverageCommand
 from .test_syntax import UnitTestingSyntaxCommand
@@ -17,6 +18,7 @@ __all__ = [
     "UnitTestingCommand",
     "UnitTestingCoverageCommand",
     "UnitTestingCurrentFileCommand",
+    "UnitTestingCurrentFileCoverageCommand",
     "UnitTestingCurrentPackageCommand",
     "UnitTestingCurrentPackageCoverageCommand",
     "UnitTestingSyntaxCommand",
