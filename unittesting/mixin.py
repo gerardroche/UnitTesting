@@ -79,6 +79,8 @@ class UnitTestingMixin(object):
         pattern = kargs["pattern"] if "pattern" in kargs else None
         output = kargs["output"] if "output" in kargs else None
         capture_console = False
+        coverage_html_report = False
+        capture_package_loggers = False
 
         jfile = os.path.join(sublime.packages_path(), package, "unittesting.json")
         if os.path.exists(jfile):
@@ -95,6 +97,8 @@ class UnitTestingMixin(object):
                 pattern = ss.get("pattern")
             if not output:
                 output = ss.get("output")
+            coverage_html_report = ss.get("coverage_html_report", False)
+            capture_package_loggers = ss.get("capture_package_loggers", False)
 
         if pattern is None:
             pattern = "test*.py"
@@ -108,7 +112,9 @@ class UnitTestingMixin(object):
             "show_reload_progress": show_reload_progress,
             "pattern": pattern,
             "output": output,
-            "capture_console": capture_console
+            "capture_console": capture_console,
+            "coverage_html_report": coverage_html_report,
+            "capture_package_loggers": capture_package_loggers
         }
 
     def default_output(self, package):
@@ -123,7 +129,10 @@ class UnitTestingMixin(object):
         output = settings["output"]
         if not output or output == "<panel>":
             output_panel = OutputPanel(
-                'UnitTesting', file_regex=r'File "([^"]*)", line (\d+)')
+                'UnitTesting',
+                file_regex=r'File "((?!\./python3\.3/)[^"]*)", line (\d+)'
+            )
+
             output_panel.show()
             stream = output_panel
         else:

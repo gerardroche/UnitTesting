@@ -50,6 +50,15 @@ class UnitTestingCoverageCommand(UnitTestingCommand):
             cov.report(file=stream, ignore_errors=ignore_errors, show_missing=show_missing)
             cov.save()
 
+            if 'coverage_html_report' in settings and settings['coverage_html_report']:
+                # TODO Use .coveragerc configurations
+                cov.html_report(
+                    directory=os.path.join(package_path, 'covhtml'),
+                    include=include,
+                    omit=omit,
+                    ignore_errors=ignore_errors
+                )
+
         super().unit_testing(stream, package, settings, [cleanup])
 
     def is_enabled(self):

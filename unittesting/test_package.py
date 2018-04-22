@@ -35,6 +35,14 @@ class UnitTestingCommand(sublime_plugin.ApplicationCommand, UnitTestingMixin):
                 raise Exception("DeferrableTestCase is used but `deferred` is `false`.")
 
     def unit_testing(self, stream, package, settings, cleanup_hooks=[]):
+
+        if not settings['capture_package_loggers']:
+            package_logger = logging.getLogger(package)
+            package_logger_log_level = package_logger.getEffectiveLevel()
+            package_logger_handlers = list(package_logger.handlers)
+            for package_logger_handler in package_logger_handlers:
+                package_logger.removeHandler(package_logger_handler)
+
         if settings["capture_console"]:
             stdout = sys.stdout
             stderr = sys.stderr
@@ -92,6 +100,13 @@ class UnitTestingCommand(sublime_plugin.ApplicationCommand, UnitTestingMixin):
                         sys.stderr = stderr
                         # remove stream set by logging.root.addHandler
                         logging.root.removeHandler(handler)
+
+                    if not settings['capture_package_loggers']:
+                        # Reset the package handlers.
+                        for package_logger_handler in package_logger_handlers:
+                            package_logger.addHandler(package_logger_handler)
+                        package_logger.setLevel(package_logger_log_level)
+
                 else:
                     sublime.set_timeout(lambda: cleanup(status + 1), 500)
 

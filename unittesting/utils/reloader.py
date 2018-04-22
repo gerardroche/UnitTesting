@@ -5,6 +5,7 @@ import threading
 import builtins
 import functools
 import importlib
+import logging
 import sys
 import types
 from contextlib import contextmanager
@@ -26,6 +27,12 @@ def reload_package(pkg_name, dummy=True, verbose=True):
     if pkg_name not in sys.modules:
         dprint("error:", pkg_name, "is not loaded.")
         return
+
+    # Clear any package loggers
+    logger = logging.getLogger(pkg_name)
+    original_log_level = logger.getEffectiveLevel()
+    for handler in list(logger.handlers):
+        logger.removeHandler(handler)
 
     main = sys.modules[pkg_name]
 
@@ -55,6 +62,8 @@ def reload_package(pkg_name, dummy=True, verbose=True):
 
     if verbose:
         dprint("end", fill='-')
+
+    logger.setLevel(original_log_level)
 
 
 def load_dummy(verbose):
