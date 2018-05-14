@@ -83,22 +83,39 @@ class UnitTestingMixin(object):
         capture_package_loggers = False
 
         jfile = os.path.join(sublime.packages_path(), package, "unittesting.json")
+
+        window = sublime.active_window()
+        if window:
+            view = window.active_view()
+            if view:
+                settings = view.settings()
+            else:
+                settings = None
+        else:
+            settings = None
+
+        def _get_setting(name, default):
+            settings_key = 'unittesting_' + name
+            if settings and settings.has(settings_key):
+                return settings.get(settings_key)
+
+            return ss.get(name, default)
+
         if os.path.exists(jfile):
             ss = JsonFile(jfile).load()
             tests_dir = ss.get("tests_dir", tests_dir)
             use_async = ss.get("async", use_async)
             deferred = ss.get("deferred", deferred)
             verbosity = ss.get("verbosity", verbosity)
-            reload_package_on_testing = ss.get(
-                "reload_package_on_testing", reload_package_on_testing)
-            show_reload_progress = ss.get("show_reload_progress", show_reload_progress)
+            reload_package_on_testing = _get_setting("reload_package_on_testing", reload_package_on_testing)
+            show_reload_progress = _get_setting("show_reload_progress", show_reload_progress)
             capture_console = ss.get("capture_console", False)
             if pattern is None:
                 pattern = ss.get("pattern")
             if not output:
                 output = ss.get("output")
-            coverage_html_report = ss.get("coverage_html_report", False)
-            capture_package_loggers = ss.get("capture_package_loggers", False)
+            coverage_html_report = _get_setting("coverage_html_report", False)
+            capture_package_loggers = _get_setting("capture_package_loggers", False)
 
         if pattern is None:
             pattern = "test*.py"
