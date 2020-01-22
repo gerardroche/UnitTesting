@@ -28,9 +28,14 @@ class UnitTestingCurrentPackageCommand(UnitTestingCommand):
 
     def unit_testing(self, stream, package, settings):
         parent = super(UnitTestingCurrentPackageCommand, self)
-        if settings["reload_package_on_testing"]:
-            self.reload_package(
-                package, dummy=True, show_reload_progress=settings["show_reload_progress"])
+
+        # Reloading seems broken in ST4
+        # https://github.com/SublimeText/UnitTesting/issues/186#issuecomment-687585639
+        if int(sublime.version()) < 4000:
+            if settings["reload_package_on_testing"]:
+                # sublime.active_window().run_command('package_reloader_reload')
+                self.reload_package(
+                    package, dummy=True, show_reload_progress=settings["show_reload_progress"])
 
         sublime.set_timeout(lambda: parent.unit_testing(stream, package, settings))
 
@@ -83,9 +88,14 @@ class UnitTestingCurrentFileCommand(UnitTestingCommand):
         # ideally, we should reuse same function in UnitTestingCurrentPackageCommand
         # but it is easier to copy it to here
         parent = super(UnitTestingCurrentFileCommand, self)
-        if settings["reload_package_on_testing"]:
-            self.reload_package(
-                package, dummy=True, show_reload_progress=settings["show_reload_progress"])
+
+        # Reloading seems broken in ST4
+        # https://github.com/SublimeText/UnitTesting/issues/186#issuecomment-687585639
+        if int(sublime.version()) < 4000:
+            if settings["reload_package_on_testing"]:
+                # sublime.active_window().run_command('package_reloader_reload')
+                self.reload_package(
+                    package, dummy=True, show_reload_progress=settings["show_reload_progress"])
 
         sublime.set_timeout(lambda: parent.unit_testing(stream, package, settings))
 
