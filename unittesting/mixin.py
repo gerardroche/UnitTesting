@@ -24,7 +24,7 @@ DEFAULT_SETTINGS = {
     "show_reload_progress": True,
     "start_coverage_after_reload": False,
     "coverage_on_worker_thread": False,  # experimental
-    "generate_html_report": False,
+    "generate_html_report": True,
     "capture_console": False,
     "failfast": False
 }
